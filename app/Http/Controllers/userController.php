@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Tables\Users;
 use Illuminate\Http\Request;
+use App\Http\Requests\storeUserRequest;
 use ProtoneMedia\Splade\Facades\Splade;
 use App\Http\Requests\updateUserRequest;
 
@@ -25,15 +26,17 @@ class userController extends Controller
      */
     public function create()
     {
-        //
+        return view("admin.users.create");
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(storeUserRequest $request,User $user)
     {
-        //
+        $user->create($request->validated());
+        Splade::toast('user Created')->autoDismiss('3');
+        return to_route('admin.users.index');
     }
 
     /**
@@ -66,8 +69,11 @@ class userController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        Splade::toast('user Deleted')->autoDismiss('3');//message
+
+        return to_route('admin.users.index');
     }
 }
